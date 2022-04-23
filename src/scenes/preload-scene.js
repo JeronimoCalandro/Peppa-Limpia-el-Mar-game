@@ -10,6 +10,8 @@ class BootScene extends Phaser.Scene {
     }
     create() {
         this.scene.start("PreloadScene")
+        dataLayer.push({'event':'ga_event','category':'Games','action':'DKW - Start Game','label':'{{Peppa Limpia el Mar}}','GameCategory':'{{game}}','Show':'{{Peppa Pig}}','Vertical Traffic':'{{vertical traffic}}'})
+        console.log("Start Game")
     }
 }
 
@@ -67,6 +69,7 @@ class PreloadScene extends Phaser.Scene {
         this.load.audio("help2", gameConfig.assetsPath + "sounds/help2.mp3")
         this.load.audio("help3", gameConfig.assetsPath + "sounds/help3.mp3")
         this.load.audio("esoEs", gameConfig.assetsPath + "sounds/esoEs.mp3")
+        this.load.audio("vuelveAIntentarlo", gameConfig.assetsPath + "sounds/vuelveAIntentarlo.mp3")
 
         // === UI ===
         this.loadElements([
@@ -88,7 +91,8 @@ class PreloadScene extends Phaser.Scene {
             "play-pause",
             "home-defeat",
             "left",
-            "rigth"
+            "rigth",
+            "restart-defeat",
         ], "buttons", "image")
 
         // === GAME SCENE ===
@@ -160,6 +164,7 @@ class PreloadScene extends Phaser.Scene {
         // === DEFEAT SCENE ===
         this.loadElements([
             "defeat",
+            "peppa",
         ], "defeat-scene", "image")
 
 

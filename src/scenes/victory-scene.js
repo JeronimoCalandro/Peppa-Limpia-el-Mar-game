@@ -7,10 +7,17 @@ class VictoryScene extends Phaser.Scene {
         this.bg=this.add.image(gWidth/2, gHeight/2, "pause-scene-bg-pause")
         this.victory=this.add.image(gWidth/2, gHeight/2-1000, "victory-scene-victory")
         this.finish=this.sound.add("finish", {loop:false})
+        this.esoEs=this.sound.add("esoEs", {loop:false})
         this.peppa=this.add.image(gWidth*0.20, gHeight*0.60+1000, "victory-scene-peppa")
-        this.finish.play()
+        if(gSound==1){
+            this.finish.play()
+            this.esoEs.play()
+        }
+        
         let bar = new BarMinigame(this, gWidth*0.64, gHeight*0.57-1000, gWidth*2, 600, 0)
         gTimesPlayed++
+        dataLayer.push({'event':'ga_event','category':'Games','action':'DKW - Successful - Level {Level}','label':'{{Peppa Limpia el Mar}}','GameCategory':'{{game}}','Show':'{{Peppa Pig}}'})
+        console.log("DKW - Successful Level")
         
         bar.update(gPoints/gBest)
 
@@ -35,6 +42,8 @@ class VictoryScene extends Phaser.Scene {
 
         this.btnPlay = new Button(this, gWidth*0.75, gHeight * 0.80-1000, "buttons-play", {
             onClick: ()=> {
+                dataLayer.push({'event':'ga_event','category':'Games','action':'DKW - Start Over','label':'{{Peppa Limpia el Mar}}','GameCategory':'{{Peppa Pi}}','Show':'{{Peppa Pig}}'})
+                console.log("DKW - Start Over")
                 this.sound.stopAll()
                 this.tweens.add({
                     targets: [this.btnPlay,  this.victory, this.btnPlay, this.bestText, this.scoreText, bar, this.bottles, this.bottlesText, this.btnHome],
@@ -62,6 +71,8 @@ class VictoryScene extends Phaser.Scene {
 
         this.btnHome = new Button(this, gWidth*0.70, gHeight * 0.70-1000, "buttons-home-defeat", {
             onClick: ()=> {
+                dataLayer.push({'event':'ga_event','category':'Games','action':'DKW - To Return','label':'{{Peppa Limpia el Mar}}','GameCategory':'{{Peppa Pig}}','Show':'{{Peppa Pig}}'})
+                console.log("DKW - To Return")
                 this.scene.stop()
                 this.scene.start("SplashScene")
             }

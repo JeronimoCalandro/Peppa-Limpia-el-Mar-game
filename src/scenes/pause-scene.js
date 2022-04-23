@@ -22,6 +22,8 @@ class PauseScene extends Phaser.Scene {
 
         this.btnMusic = new Button(this, gWidth*0.45, gHeight * 0.40-1000, "buttons-music-pause", {
             onClick: ()=> {
+                dataLayer.push({'event':'ga_event','category':'Games','action':'DKW - Sound [Activate - Desactivate]','label':'{{Peppa Limpia el Mar}}','GameCategory':'{{game}}','Show':'{{Peppa Pig}}'})
+                console.log("DKW - Sound")
                 gMusic=gMusic*-1
             }
         })
@@ -29,6 +31,8 @@ class PauseScene extends Phaser.Scene {
         this.btnSound = new Button(this, gWidth*0.55, gHeight * 0.40-1000, "buttons-sound-pause", {
             onClick: ()=> {
                 gSound=gSound*-1
+                dataLayer.push({'event':'ga_event','category':'Games','action':'DKW - Sound [Activate - Desactivate]','label':'{{Peppa Limpia el Mar}}','GameCategory':'{{game}}','Show':'{{Peppa Pig}}'})
+                console.log("DKW - Sound")
                 if(gSound==1){
                   
                 }
@@ -64,6 +68,8 @@ class PauseScene extends Phaser.Scene {
 
         this.btnHome = new Button(this, gWidth*0.35, gHeight *0.40-1000, "buttons-home", {
             onClick: ()=> {
+                dataLayer.push({'event':'ga_event','category':'Games','action':'DKW - To Return','label':'{{Peppa Limpia el Mar}}','GameCategory':'{{Peppa Pig}}','Show':'{{Peppa Pig}}'})
+                console.log("DKW - To Return")
                 this.sound.stopAll()
                 if(gSound==1){
                    
@@ -75,6 +81,8 @@ class PauseScene extends Phaser.Scene {
 
         this.btnRestart = new Button(this, gWidth*0.45, gHeight * 0.60-1000, "buttons-play-pause", {
             onClick: ()=> {
+                dataLayer.push({'event':'ga_event','category':'Games','action':'DKW - Start Over','label':'{{Peppa Limpia el Mar}}','GameCategory':'{{Peppa Pi}}','Show':'{{Peppa Pig}}'})
+                console.log("DKW - Start Over")
                 this.tweens.add({
                     targets: [this.btnClose, this.btnHelp, this.btnHome, this.btnMusic, this.btnSound, this.pause, this.btnRestart],
                     y: "-= 1000",
@@ -127,10 +135,10 @@ class PauseScene extends Phaser.Scene {
 
     update(){
         if(gMusic==1){
-            game.sound.mute=false
+            //game.sound.mute=false
         }
         else{
-            game.sound.mute=true
+            //game.sound.mute=true
         }
 
     }

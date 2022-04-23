@@ -42,6 +42,8 @@ class SplashScene extends Phaser.Scene {
 
         this.btnMusic = new Button(this, gWidth*0.912, gHeight * 0.07-1000, "buttons-music", {
             onClick: ()=> {
+                dataLayer.push({'event':'ga_event','category':'Games','action':'DKW - Sound [Activate - Desactivate]','label':'{{Peppa Limpia el Mar}}','GameCategory':'{{game}}','Show':'{{Peppa Pig}}'})
+                console.log("DKW - Sound")
                 gMusic=gMusic*-1
             }
         })

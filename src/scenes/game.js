@@ -66,6 +66,13 @@ class playGame extends Phaser.Scene{
         this.bottleGroupLeft=this.physics.add.group()
         this.bottleGroupRigth=this.physics.add.group()
         this.sand=this.add.image(gWidth/2, gHeight*0.94, "game-sand")
+
+        this.objSi1=this.physics.add.group()
+        this.objSi2=this.physics.add.group()
+        this.objSi3=this.physics.add.group()
+        this.objSi4=this.physics.add.group()
+        this.objSi5=this.physics.add.group()
+        this.objSi6=this.physics.add.group()
         
         //this.cana=this.physics.add.image(gWidth*0.423, gHeight*0.50, "game-caña")
         //this.ansuelo=this.physics.add.image(gWidth*0.321, gHeight*0.399, "game-ansuelo").setSize(20,20)
@@ -74,7 +81,7 @@ class playGame extends Phaser.Scene{
     
 
         this.cana=this.physics.add.image(gWidth*0.432, gHeight*0.50, "game-cañaPuntos")
-        this.ansuelo=this.physics.add.image(gWidth*0.325, gHeight*0.436, "game-puntoFinal").setSize(40,40).setInteractive()
+        this.ansuelo=this.physics.add.image(gWidth*0.325, gHeight*0.436, "game-puntoFinal").setInteractive()
         this.mango=this.physics.add.image(gWidth/2, gHeight*0.90, "game-mango")
 
         this.cana.setVisible(false)
@@ -87,14 +94,14 @@ class playGame extends Phaser.Scene{
         this.ansuelo1=this.add.image(gWidth*0.18, gHeight*0.86+1000, "game-ansueloHUD")
         this.ansuelo2=this.add.image(gWidth*0.225, gHeight*0.86+1000, "game-ansueloHUD")
         this.ansuelo3=this.add.image(gWidth*0.27, gHeight*0.86+1000, "game-ansueloHUD")
-        this.score=this.add.image(gWidth*0.07, gHeight*0.10-1000, "game-score")
+        this.score=this.add.image(gWidth*0.13, gHeight*0.10-1000, "game-score")
 
-        this.rigthText=this.add.text(gWidth*0.077, gHeight*0.073-1000, this.pointsRigth,{     
+        this.rigthText=this.add.text(gWidth*0.137, gHeight*0.073-1000, this.pointsRigth,{     
             fontSize:"90px",
             fill:"#fff",
             fontFamily:"Fredoka",
         });
-        this.leftText=this.add.text(gWidth*0.04, gHeight*0.073-1000, this.pointsLeft,{     
+        this.leftText=this.add.text(gWidth*0.10, gHeight*0.073-1000, this.pointsLeft,{     
             fontSize:"90px",
             fill:"#fff",
             fontFamily:"Fredoka",
@@ -131,6 +138,8 @@ class playGame extends Phaser.Scene{
 
         this.btnMusic = new Button(this, gWidth*0.912, gHeight * 0.07-1000, "buttons-music", {
             onClick: ()=> {
+                dataLayer.push({'event':'ga_event','category':'Games','action':'DKW - Sound [Activate - Desactivate]','label':'{{A Contar con Bean y Cosa}}','GameCategory':'{{game}}','Show':'{{Ba Da Bean}}'})
+                console.log("DKW - Sound")
                 gMusic=gMusic*-1
 
                 if(gSound==1){
@@ -393,7 +402,7 @@ class playGame extends Phaser.Scene{
 
         this.point0 = this.add.image(point0.x, point0.y, 'game-puntoFinal', 0).setInteractive()
         this.controlPoint=this.add.image(this.control.x, point1.y-300, 'game-puntoFinal', 0).setInteractive().setAlpha(0)
-        this.point1 = this.physics.add.image(point1.x, point1.y, 'game-puntoFinal', 0).setInteractive().setScale(20,20).setAlpha(0.0000001)
+        this.point1 = this.physics.add.image(point1.x, point1.y, 'game-puntoFinal', 0).setInteractive().setScale(300,50).setAlpha(0.0000001)
 
         this.point0.setData('vector', point0)
         this.controlPoint.setData('vector', this.control)
@@ -533,7 +542,7 @@ class playGame extends Phaser.Scene{
             thisScene.point1.setTexture("game-puntoFinal").setScale(2,2)
             thisScene.controlPoint.setPosition(gWidth*0.515, gHeight*0.71)
             thisScene.controlPoint.data.get('vector').set(thisScene.controlPoint.x, thisScene.controlPoint.y)
-            thisScene.point1.setScale(20,20)
+            thisScene.point1.setScale(300,50)
             thisScene.point1.setAlpha(0.0000001)
         }
 
@@ -613,36 +622,7 @@ class playGame extends Phaser.Scene{
         this.physics.add.overlap(this.point1, this.obj1Group, obj1Collider)
         function obj1Collider(ansuelo, obj){
             if(thisScene.isClicking==false){
-                if(obj==thisScene.spawner1Si){
-                    thisScene.points++
-                    thisScene.isTouching=true
-                    thisScene.pointsRigth++      
-                    if(thisScene.pointsRigth>9){
-                        thisScene.pointsLeft++
-                        thisScene.pointsRigth=0
-                    }
-                    thisScene.leftText.setText(thisScene.pointsLeft)
-                    thisScene.rigthText.setText(thisScene.pointsRigth)
-                    if(gSound==1){
-                        thisScene.correct.play()
-                    }
-                    thisScene.tweens.add({
-                        targets: obj,
-                        duration: 170,
-                        repeat: 0,
-                        ease: "Circ",
-                        yoyo: 1,
-                        scale: obj.scale*1.3
-                    }) 
-                    thisScene.timerObjs=thisScene.time.addEvent({
-                        delay: 400,
-                        loop: false,
-                        callback: () => {
-                            Wait2(obj)
-                        }
-                    })
-                }
-                else{
+                
                     obj.setAlpha(0.5)
                     thisScene.lifes--
                     if(thisScene.lifes==2){
@@ -657,13 +637,20 @@ class playGame extends Phaser.Scene{
                         if(gPoints>gBest){
                             gBest=gPoints
                         }
-                        thisScene.scene.pause()
-                        thisScene.scene.launch("VictoryScene")
+                        if(thisScene.points==0){
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("DefeatScene")
+                        }
+                        else{
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("VictoryScene")
+                        }
+                        
                     }
                     if(gSound==1){
                         thisScene.incorrect.play()
                     }
-                    thisScene.isClicking=true
+                    thisScene.isClicking=false
                     thisScene.timerObjs=thisScene.time.addEvent({
                         delay: 400,
                         loop: false,
@@ -671,43 +658,14 @@ class playGame extends Phaser.Scene{
                             Wait2(obj)
                         }
                     })
-                }
+                
                 
             }
         }
         this.physics.add.overlap(this.point1, this.obj2Group, obj2Collider)
         function obj2Collider(ansuelo, obj){
             if(thisScene.isClicking==false){
-                if(obj==thisScene.spawner2Si){
-                    thisScene.points++
-                    thisScene.isTouching=true
-                    thisScene.pointsRigth++      
-                    if(thisScene.pointsRigth>9){
-                        thisScene.pointsLeft++
-                        thisScene.pointsRigth=0
-                    }
-                    thisScene.leftText.setText(thisScene.pointsLeft)
-                    thisScene.rigthText.setText(thisScene.pointsRigth)
-                    if(gSound==1){
-                        thisScene.correct.play()
-                    }
-                    thisScene.tweens.add({
-                        targets: obj,
-                        duration: 170,
-                        repeat: 0,
-                        ease: "Circ",
-                        yoyo: 1,
-                        scale: obj.scale*1.3
-                    }) 
-                    thisScene.timerObjs=thisScene.time.addEvent({
-                        delay: 400,
-                        loop: false,
-                        callback: () => {
-                            Wait2(obj)
-                        }
-                    })
-                }
-                else{
+                
                     obj.setAlpha(0.5)
                     thisScene.lifes--
                     if(thisScene.lifes==2){
@@ -722,13 +680,19 @@ class playGame extends Phaser.Scene{
                         if(gPoints>gBest){
                             gBest=gPoints
                         }
-                        thisScene.scene.pause()
-                        thisScene.scene.launch("VictoryScene")
+                        if(thisScene.points==0){
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("DefeatScene")
+                        }
+                        else{
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("VictoryScene")
+                        }
                     }
                     if(gSound==1){
                         thisScene.incorrect.play()
                     }
-                    thisScene.isClicking=true
+                    thisScene.isClicking=false
                     thisScene.timerObjs=thisScene.time.addEvent({
                         delay: 400,
                         loop: false,
@@ -736,43 +700,14 @@ class playGame extends Phaser.Scene{
                             Wait2(obj)
                         }
                     })
-                }
+                
                 
             }
         }
         this.physics.add.overlap(this.point1, this.obj3Group, obj3Collider)
         function obj3Collider(ansuelo, obj){
             if(thisScene.isClicking==false){
-                if(obj==thisScene.spawner3Si){
-                    thisScene.points++
-                    thisScene.isTouching=true
-                    thisScene.pointsRigth++      
-                    if(thisScene.pointsRigth>9){
-                        thisScene.pointsLeft++
-                        thisScene.pointsRigth=0
-                    }
-                    thisScene.leftText.setText(thisScene.pointsLeft)
-                    thisScene.rigthText.setText(thisScene.pointsRigth)
-                    if(gSound==1){
-                        thisScene.correct.play()
-                    }
-                    thisScene.tweens.add({
-                        targets: obj,
-                        duration: 170,
-                        repeat: 0,
-                        ease: "Circ",
-                        yoyo: 1,
-                        scale: obj.scale*1.3
-                    }) 
-                    thisScene.timerObjs=thisScene.time.addEvent({
-                        delay: 400,
-                        loop: false,
-                        callback: () => {
-                            Wait2(obj)
-                        }
-                    })
-                }
-                else{
+                
                     obj.setAlpha(0.5)
                     thisScene.lifes--
                     if(thisScene.lifes==2){
@@ -787,13 +722,19 @@ class playGame extends Phaser.Scene{
                         if(gPoints>gBest){
                             gBest=gPoints
                         }
-                        thisScene.scene.pause()
-                        thisScene.scene.launch("VictoryScene")
+                        if(thisScene.points==0){
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("DefeatScene")
+                        }
+                        else{
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("VictoryScene")
+                        }
                     }
                     if(gSound==1){
                         thisScene.incorrect.play()
                     }
-                    thisScene.isClicking=true
+                    thisScene.isClicking=false
                     thisScene.timerObjs=thisScene.time.addEvent({
                         delay: 400,
                         loop: false,
@@ -801,43 +742,14 @@ class playGame extends Phaser.Scene{
                             Wait2(obj)
                         }
                     })
-                }
+                
                 
             }
         }
         this.physics.add.overlap(this.point1, this.obj4Group, obj4Collider)
         function obj4Collider(ansuelo, obj){
             if(thisScene.isClicking==false){
-                if(obj==thisScene.spawner4Si){
-                    thisScene.points++
-                    thisScene.isTouching=true
-                    thisScene.pointsRigth++      
-                    if(thisScene.pointsRigth>9){
-                        thisScene.pointsLeft++
-                        thisScene.pointsRigth=0
-                    }
-                    thisScene.leftText.setText(thisScene.pointsLeft)
-                    thisScene.rigthText.setText(thisScene.pointsRigth)
-                    if(gSound==1){
-                        thisScene.correct.play()
-                    }
-                    thisScene.tweens.add({
-                        targets: obj,
-                        duration: 170,
-                        repeat: 0,
-                        ease: "Circ",
-                        yoyo: 1,
-                        scale: obj.scale*1.3
-                    }) 
-                    thisScene.timerObjs=thisScene.time.addEvent({
-                        delay: 400,
-                        loop: false,
-                        callback: () => {
-                            Wait2(obj)
-                        }
-                    })
-                }
-                else{
+               
                     obj.setAlpha(0.5)
                     thisScene.lifes--
                     if(thisScene.lifes==2){
@@ -852,13 +764,19 @@ class playGame extends Phaser.Scene{
                         if(gPoints>gBest){
                             gBest=gPoints
                         }
-                        thisScene.scene.pause()
-                        thisScene.scene.launch("VictoryScene")
+                        if(thisScene.points==0){
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("DefeatScene")
+                        }
+                        else{
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("VictoryScene")
+                        }
                     }
                     if(gSound==1){
                         thisScene.incorrect.play()
                     }
-                    thisScene.isClicking=true
+                    thisScene.isClicking=false
                     thisScene.timerObjs=thisScene.time.addEvent({
                         delay: 400,
                         loop: false,
@@ -866,14 +784,99 @@ class playGame extends Phaser.Scene{
                             Wait2(obj)
                         }
                     })
-                }
+                
                 
             }
         }
         this.physics.add.overlap(this.point1, this.obj5Group, obj5Collider)
         function obj5Collider(ansuelo, obj){
             if(thisScene.isClicking==false){
-                if(obj==thisScene.spawner5Si){
+                
+                    obj.setAlpha(0.5)
+                    thisScene.lifes--
+                    if(thisScene.lifes==2){
+                        thisScene.ansuelo3.setVisible(false)
+                    }
+                    if(thisScene.lifes==1){
+                        thisScene.ansuelo2.setVisible(false)
+                    }
+                    if(thisScene.lifes==0){
+                        thisScene.ansuelo1.setVisible(false)
+                        gPoints=thisScene.points
+                        if(gPoints>gBest){
+                            gBest=gPoints
+                        }
+                        if(thisScene.points==0){
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("DefeatScene")
+                        }
+                        else{
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("VictoryScene")
+                        }
+                    }
+                    if(gSound==1){
+                        thisScene.incorrect.play()
+                    }
+                    thisScene.isClicking=false
+                    thisScene.timerObjs=thisScene.time.addEvent({
+                        delay: 400,
+                        loop: false,
+                        callback: () => {
+                            Wait2(obj)
+                        }
+                    })
+                
+                
+            }
+        }
+        this.physics.add.overlap(this.point1, this.obj6Group, obj6Collider)
+        function obj6Collider(ansuelo, obj){
+            if(thisScene.isClicking==false){
+                
+                    obj.setAlpha(0.5)
+                    thisScene.lifes--
+                    if(thisScene.lifes==2){
+                        thisScene.ansuelo3.setVisible(false)
+                    }
+                    if(thisScene.lifes==1){
+                        thisScene.ansuelo2.setVisible(false)
+                    }
+                    if(thisScene.lifes==0){
+                        thisScene.ansuelo1.setVisible(false)
+                        gPoints=thisScene.points
+                        if(gPoints>gBest){
+                            gBest=gPoints
+                        }
+                        if(thisScene.points==0){
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("DefeatScene")
+                        }
+                        else{
+                            thisScene.scene.pause()
+                            thisScene.scene.launch("VictoryScene")
+                        }
+                    }
+                    if(gSound==1){
+                        thisScene.incorrect.play()
+                    }
+                    thisScene.isClicking=false
+                    thisScene.timerObjs=thisScene.time.addEvent({
+                        delay: 400,
+                        loop: false,
+                        callback: () => {
+                            Wait2(obj)
+                        }
+                    })
+                
+                    
+            }
+        }
+
+        this.physics.add.overlap(this.point1, [this.objSi1, this.objSi2, this.objSi3, this.objSi4, this.objSi5, this.objSi6], objSiCollider)
+        function objSiCollider(ansuelo, obj){
+            if(thisScene.isClicking==false){
+                
                     thisScene.points++
                     thisScene.isTouching=true
                     thisScene.pointsRigth++      
@@ -901,105 +904,9 @@ class playGame extends Phaser.Scene{
                             Wait2(obj)
                         }
                     })
-                }
-                else{
-                    obj.setAlpha(0.5)
-                    thisScene.lifes--
-                    if(thisScene.lifes==2){
-                        thisScene.ansuelo3.setVisible(false)
-                    }
-                    if(thisScene.lifes==1){
-                        thisScene.ansuelo2.setVisible(false)
-                    }
-                    if(thisScene.lifes==0){
-                        thisScene.ansuelo1.setVisible(false)
-                        gPoints=thisScene.points
-                        if(gPoints>gBest){
-                            gBest=gPoints
-                        }
-                        thisScene.scene.pause()
-                        thisScene.scene.launch("VictoryScene")
-                    }
-                    if(gSound==1){
-                        thisScene.incorrect.play()
-                    }
-                    thisScene.isClicking=true
-                    thisScene.timerObjs=thisScene.time.addEvent({
-                        delay: 400,
-                        loop: false,
-                        callback: () => {
-                            Wait2(obj)
-                        }
-                    })
-                }
-                
-            }
-        }
-        this.physics.add.overlap(this.point1, this.obj6Group, obj6Collider)
-        function obj6Collider(ansuelo, obj){
-                if(thisScene.isClicking==false){
-                    if(obj==thisScene.spawner6Si){
-                        thisScene.points++
-                        thisScene.isTouching=true
-                        thisScene.pointsRigth++      
-                        if(thisScene.pointsRigth>9){
-                            thisScene.pointsLeft++
-                            thisScene.pointsRigth=0
-                        }
-                        thisScene.leftText.setText(thisScene.pointsLeft)
-                        thisScene.rigthText.setText(thisScene.pointsRigth)
-                        if(gSound==1){
-                            thisScene.correct.play()
-                        }
-                        thisScene.tweens.add({
-                            targets: obj,
-                            duration: 170,
-                            repeat: 0,
-                            ease: "Circ",
-                            yoyo: 1,
-                            scale: obj.scale*1.3
-                        }) 
-                        thisScene.timerObjs=thisScene.time.addEvent({
-                            delay: 400,
-                            loop: false,
-                            callback: () => {
-                                Wait2(obj)
-                            }
-                        })
-                    }
-                    else{
-                        obj.setAlpha(0.5)
-                        thisScene.lifes--
-                        if(thisScene.lifes==2){
-                            thisScene.ansuelo3.setVisible(false)
-                        }
-                        if(thisScene.lifes==1){
-                            thisScene.ansuelo2.setVisible(false)
-                        }
-                        if(thisScene.lifes==0){
-                            thisScene.ansuelo1.setVisible(false)
-                            gPoints=thisScene.points
-                            if(gPoints>gBest){
-                                gBest=gPoints
-                            }
-                            thisScene.scene.pause()
-                            thisScene.scene.launch("VictoryScene")
-                        }
-                        if(gSound==1){
-                            thisScene.incorrect.play()
-                        }
-                        thisScene.isClicking=true
-                        thisScene.timerObjs=thisScene.time.addEvent({
-                            delay: 400,
-                            loop: false,
-                            callback: () => {
-                                Wait2(obj)
-                            }
-                        })
-                    }
                     
-                }
-            
+                    
+            }
         }
 
         function Wait2(obj){
@@ -1010,6 +917,12 @@ class playGame extends Phaser.Scene{
             thisScene.obj4Group.killAndHide(obj)
             thisScene.obj5Group.killAndHide(obj)
             thisScene.obj6Group.killAndHide(obj)
+            thisScene.objSi1.killAndHide(obj)
+            thisScene.objSi2.killAndHide(obj)
+            thisScene.objSi3.killAndHide(obj)
+            thisScene.objSi4.killAndHide(obj)
+            thisScene.objSi5.killAndHide(obj)
+            thisScene.objSi6.killAndHide(obj)
             thisScene.bottleGroupRigth.killAndHide(obj)
             thisScene.bottleGroupLeft.killAndHide(obj)
             obj.body.enable=false
@@ -1065,6 +978,16 @@ class playGame extends Phaser.Scene{
             obj.destroy()
         }
 
+        this.physics.add.overlap( this.destroy1, [this.objSi2, this.objSi4, this.objSi6], destroyerSiRigth)
+        function destroyerSiRigth (destroyer, obj){
+            obj.destroy()
+        }
+
+        this.physics.add.overlap( this.destroy2, [this.objSi1, this.objSi3, this.objSi5], destroyerSiLeft)
+        function destroyerSiLeft(destroyer, obj){
+            obj.destroy()
+        }
+
         //=========================================================================================================================
 
         thisScene.leftText.setText(thisScene.pointsLeft)
@@ -1077,10 +1000,10 @@ class playGame extends Phaser.Scene{
             else if(gMusic==-1){
                 this.splash.setMute(true)
             }
-            game.sound.mute=false
+            //game.sound.mute=false
         }
         else if(gSound==-1){
-            game.sound.mute=true
+            //game.sound.mute=true
         }
 
         this.scene.pause()
@@ -1093,86 +1016,7 @@ class playGame extends Phaser.Scene{
         let thisScene=this
         //console.log(this.isClicking)
         // =============================================== MOVIMIENTO CAÑA ========================================================
-        /*if(this.cursor.left.isDown){
-            this.mango.setVelocityX(-800)
-            this.ansuelo.setVelocityX(-800)
-            this.cana.setVelocityX(-800)
-            this.ansuelo.setVelocityY(0)
-            this.cana.setVelocityY(0)
-            this.isMobile=false
-        }
-        else if(this.cursor.right.isDown){
-            this.mango.setVelocityX(800)
-            this.ansuelo.setVelocityX(800)
-            this.cana.setVelocityX(800)
-            this.ansuelo.setVelocityY(0)
-            this.cana.setVelocityY(0)
-            this.isMobile=false
-        }
-        else if(this.cursor.up.isDown){
-            if(this.cana.y>gHeight*0.30){
-                this.ansuelo.setVelocityY(-800)
-                this.cana.setVelocityY(-800)
-                this.ansuelo.setVelocityX(-100)
-                this.cana.setVelocityX(-100)
-            }
-            else{
-                this.ansuelo.setVelocityY(0)
-                this.cana.setVelocityY(0)
-                this.ansuelo.setVelocityX(0)
-                this.cana.setVelocityX(0)
-            }       
-            this.mango.setVelocityX(0)
-            this.isMobile=false
-        }
-        else if(this.cursor.down.isDown){
-            if(this.cana.y<gHeight*0.75){
-                this.ansuelo.setVelocityY(800)
-                this.cana.setVelocityY(800)
-                this.ansuelo.setVelocityX(100)
-                this.cana.setVelocityX(100)
-            }
-            else{
-                this.ansuelo.setVelocityY(0)
-                this.cana.setVelocityY(0)
-                this.ansuelo.setVelocityX(0)
-                this.cana.setVelocityX(0)
-            }   
-            this.mango.setVelocityX(0)
-            this.isMobile=false
-        }
-        else{
-            this.mango.setVelocityX(0)
-            this.ansuelo.setVelocityX(0)
-            this.cana.setVelocityX(0)
-            this.ansuelo.setVelocityY(0)
-            this.cana.setVelocityY(0)
-        }*/
-
         
-        
-        
-        //console.log(this.isTouching)
-        /*if(this.isMobile){
-            this.isTouching=true
-
-            this.cana.setVisible(false)
-            this.ansuelo.setVisible(false)
-            this.point0.setVisible(true)
-            this.point1.setVisible(true)
-        }
-        else{
-            if(this.space.isDown){
-                this.isTouching=true
-            }
-            else{
-                this.isTouching=false
-            }
-            this.point0.setVisible(false)
-            this.point1.setVisible(false)
-            this.cana.setVisible(true)
-            this.ansuelo.setVisible(true)
-        }*/
 
 
        // ==========================================================  NUBES  ==========================================================
@@ -1191,8 +1035,8 @@ class playGame extends Phaser.Scene{
 
         
 
-        /*this.leftText.setText(this.pointsLeft)
-        this.rigthText.setText(this.pointsRigth)*/
+        this.leftText.setText(this.pointsLeft)
+        this.rigthText.setText(this.pointsRigth)
 
 
         
@@ -1265,7 +1109,7 @@ class playGame extends Phaser.Scene{
         }
 
         // ========================================================= VERSION LITE =========================================================
-        if (gTimesPlayed== 5) {
+        /*if (gTimesPlayed== 5) {
             if (gLogin == false) {
                 thisScene.scene.pause()
                 try {
@@ -1301,7 +1145,7 @@ class playGame extends Phaser.Scene{
                 })(this);
 
             }
-        }
+        }*/
     }
     //==================================================================================================================================
 
@@ -1310,7 +1154,7 @@ class playGame extends Phaser.Scene{
     Spawner1(){
         this.aux1=Phaser.Math.Between(1,6)
         if(this.aux1==3 || this.aux1==4){
-            this.spawner1Si=this.physics.add.image(gWidth*-0.10, gHeight*0.30, this.objects[this.aux1]).setScale(0.30,0.30)
+            this.spawner1Si=this.physics.add.image(gWidth*-0.10, gHeight*0.30, this.objects[this.aux1]).setScale(0.30,0.30).setSize(100,100)
             this.tweens.add({
                 targets: this.spawner1Si,
                 y: "-= 50",
@@ -1320,11 +1164,11 @@ class playGame extends Phaser.Scene{
                 repeat: -1,
                 yoyo: true
             })
-            this.obj1Group.add(this.spawner1Si).setVelocityX(55)
+            this.objSi1.add(this.spawner1Si).setVelocityX(55)
             this.layer1.add(this.spawner1Si)
         }
         else{
-            this.spawner1=this.physics.add.image(gWidth*-0.10, gHeight*0.30, this.objects[this.aux1]).setScale(0.30,0.30)
+            this.spawner1=this.physics.add.image(gWidth*-0.10, gHeight*0.30, this.objects[this.aux1]).setScale(0.30,0.30).setSize(100,100)
             this.tweens.add({
                 targets: this.spawner1,
                 y: "-= 50",
@@ -1342,7 +1186,7 @@ class playGame extends Phaser.Scene{
     Spawner2(){
         this.aux2=Phaser.Math.Between(1,6)
         if(this.aux2==3 || this.aux2==4){
-            this.spawner2Si=this.physics.add.image(gWidth*1.10, gHeight*0.37, this.objects[this.aux2]).setScale(0.40,0.40)
+            this.spawner2Si=this.physics.add.image(gWidth*1.10, gHeight*0.37, this.objects[this.aux2]).setScale(0.40,0.40).setSize(120,120)
             this.tweens.add({
                 targets: this.spawner2Si,
                 y: "-= 50",
@@ -1353,11 +1197,11 @@ class playGame extends Phaser.Scene{
                 yoyo: true
             })
             this.spawner2Si.flipX=true
-            this.obj2Group.add(this.spawner2Si).setVelocityX(-55)
+            this.objSi2.add(this.spawner2Si).setVelocityX(-55)
             this.layer2.add(this.spawner2Si)
         }
         else{
-            this.spawner2=this.physics.add.image(gWidth*1.10, gHeight*0.37, this.objects[this.aux2]).setScale(0.40,0.40)
+            this.spawner2=this.physics.add.image(gWidth*1.10, gHeight*0.37, this.objects[this.aux2]).setScale(0.40,0.40).setSize(120,120)
             this.tweens.add({
                 targets: this.spawner2,
                 y: "-= 50",
@@ -1376,7 +1220,7 @@ class playGame extends Phaser.Scene{
     Spawner3(){
         this.aux3=Phaser.Math.Between(1,6)
         if(this.aux3==3 || this.aux3==4){
-            this.spawner3Si=this.physics.add.image(gWidth*-0.10, gHeight*0.45, this.objects[this.aux3]).setScale(0.50,0.50)
+            this.spawner3Si=this.physics.add.image(gWidth*-0.10, gHeight*0.45, this.objects[this.aux3]).setScale(0.50,0.50).setSize(140,140)
             this.tweens.add({
                 targets: this.spawner3Si,
                 y: "-= 50",
@@ -1386,11 +1230,11 @@ class playGame extends Phaser.Scene{
                 repeat: -1,
                 yoyo: true
             })
-            this.obj3Group.add(this.spawner3Si).setVelocityX(55)
+            this.objSi3.add(this.spawner3Si).setVelocityX(55)
             this.layer3.add(this.spawner3Si)
         }
         else{
-            this.spawner3=this.physics.add.image(gWidth*-0.10, gHeight*0.45, this.objects[this.aux3]).setScale(0.50,0.50)
+            this.spawner3=this.physics.add.image(gWidth*-0.10, gHeight*0.45, this.objects[this.aux3]).setScale(0.50,0.50).setSize(140,140)
             this.tweens.add({
                 targets: this.spawner3,
                 y: "-= 50",
@@ -1402,12 +1246,13 @@ class playGame extends Phaser.Scene{
             })
             this.obj3Group.add(this.spawner3).setVelocityX(55)
             this.layer3.add(this.spawner3)
+        
         }  
     }
     Spawner4(){
         this.aux4=Phaser.Math.Between(1,6)
         if(this.aux4==3 || this.aux4==4){
-            this.spawner4Si=this.physics.add.image(gWidth*1.10, gHeight*0.50, this.objects[this.aux4]).setScale(0.60,0.60)
+            this.spawner4Si=this.physics.add.image(gWidth*1.10, gHeight*0.50, this.objects[this.aux4]).setScale(0.60,0.60).setSize(160,160)
             this.tweens.add({
                 targets: this.spawner4Si,
                 y: "-= 50",
@@ -1418,11 +1263,11 @@ class playGame extends Phaser.Scene{
                 yoyo: true
             })
             this.spawner4Si.flipX=true
-            this.obj4Group.add(this.spawner4Si).setVelocityX(-55)
+            this.objSi4.add(this.spawner4Si).setVelocityX(-55)
             this.layer4.add(this.spawner4Si)
         }
         else{
-            this.spawner4=this.physics.add.image(gWidth*1.10, gHeight*0.50, this.objects[this.aux4]).setScale(0.60,0.60)
+            this.spawner4=this.physics.add.image(gWidth*1.10, gHeight*0.50, this.objects[this.aux4]).setScale(0.60,0.60).setSize(160,160)
             this.tweens.add({
                 targets: this.spawner4,
                 y: "-= 50",
@@ -1440,7 +1285,7 @@ class playGame extends Phaser.Scene{
     Spawner5(){
         this.aux5=Phaser.Math.Between(1,6)
         if(this.aux5==3 || this.aux5==4){
-            this.spawner5Si=this.physics.add.image(gWidth*-0.10, gHeight*0.60, this.objects[this.aux5]).setScale(0.70,0.70)
+            this.spawner5Si=this.physics.add.image(gWidth*-0.10, gHeight*0.60, this.objects[this.aux5]).setScale(0.70,0.70).setSize(180,180)
             this.tweens.add({
                 targets: this.spawner5Si,
                 y: "-= 50",
@@ -1450,11 +1295,11 @@ class playGame extends Phaser.Scene{
                 repeat: -1,
                 yoyo: true
             })
-            this.obj5Group.add(this.spawner5Si).setVelocityX(55)
+            this.objSi5.add(this.spawner5Si).setVelocityX(55)
             this.layer5.add(this.spawner5Si)
         }
         else{
-            this.spawner5=this.physics.add.image(gWidth*-0.10, gHeight*0.60, this.objects[this.aux5]).setScale(0.70,0.70)
+            this.spawner5=this.physics.add.image(gWidth*-0.10, gHeight*0.60, this.objects[this.aux5]).setScale(0.70,0.70).setSize(180,180)
             this.tweens.add({
                 targets: this.spawner5,
                 y: "-= 50",
@@ -1471,7 +1316,7 @@ class playGame extends Phaser.Scene{
     Spawner6(){
         this.aux6=Phaser.Math.Between(1,6)
         if(this.aux6==3 || this.aux6==4){
-            this.spawner6Si=this.physics.add.sprite(gWidth*1.10, gHeight*0.70, this.objects[this.aux6]).setScale(0.80,0.80)
+            this.spawner6Si=this.physics.add.sprite(gWidth*1.10, gHeight*0.70, this.objects[this.aux6]).setScale(0.80,0.80).setSize(200,200)
             this.tweens.add({
                 targets: this.spawner6Si,
                 y: "-= 50",
@@ -1482,11 +1327,11 @@ class playGame extends Phaser.Scene{
                 yoyo: true
             })
             this.spawner6Si.flipX=true
-            this.obj6Group.add(this.spawner6Si).setVelocityX(-55)
+            this.objSi6.add(this.spawner6Si).setVelocityX(-55)
             this.layer6.add(this.spawner6Si)
         }
         else{
-            this.spawner6=this.physics.add.sprite(gWidth*1.10, gHeight*0.70, this.objects[this.aux6]).setScale(0.80,0.80)
+            this.spawner6=this.physics.add.sprite(gWidth*1.10, gHeight*0.70, this.objects[this.aux6]).setScale(0.80,0.80).setSize(200,200)
             this.tweens.add({
                 targets: this.spawner6,
                 y: "-= 50",
@@ -1508,12 +1353,12 @@ class playGame extends Phaser.Scene{
         }
         
         if(this.aux%2==0){
-            this.bottle=this.physics.add.image(gWidth*1.10, gHeight*this.aux/10, this.objects[0]).setScale((this.aux+1)/10, (this.aux+1)/10,)
+            this.bottle=this.physics.add.image(gWidth*1.10, gHeight*this.aux/10, this.objects[0]).setScale((this.aux+1)/10, (this.aux+1)/10,).setSize(150,200)
             this.bottle.flipX=true
             this.bottleGroupRigth.add(this.bottle).setVelocityX(-100)
         }
         else{
-            this.bottle=this.physics.add.image(gWidth*-0.10, gHeight*this.aux/10, this.objects[0]).setScale((this.aux+1)/10, (this.aux+1)/10,)
+            this.bottle=this.physics.add.image(gWidth*-0.10, gHeight*this.aux/10, this.objects[0]).setScale((this.aux+1)/10, (this.aux+1)/10,).setSize(150,200)
             this.bottleGroupLeft.add(this.bottle).setVelocityX(+100)
         }
 
